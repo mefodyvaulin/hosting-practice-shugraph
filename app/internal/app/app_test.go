@@ -71,7 +71,7 @@ func run(m *testing.M) int {
 		return 1
 	}
 	r := chi.NewRouter()
-	handler.NewAPI(r, noteService, pool)
+	handler.NewAPI(r, noteService, pool, cfg.AppConfig)
 	server := httptest.NewServer(r)
 	defer server.Close()
 

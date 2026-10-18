@@ -36,7 +36,7 @@ func Serve(ctx context.Context) error {
 	repo := repository.NewPgNoteRepository(pool)
 	noteService := service.NewNoteService(repo)
 	router := chi.NewMux()
-	_ = handler.NewAPI(router, noteService, pool)
+	_ = handler.NewAPI(router, noteService, pool, cfg.AppConfig)
 
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%d", cfg.Port),
@@ -98,8 +98,12 @@ func Migrate(ctx context.Context) error {
 }
 
 func GenerateOpenAPI() error {
+	cfg, err := config.Load[config.AppConfig]()
+	if err != nil {
+		return fmt.Errorf("load config: %w", err)
+	}
 	r := chi.NewRouter()
-	api := handler.NewAPI(r, nil, nil)
+	api := handler.NewAPI(r, nil, nil, cfg)
 	b, err := api.OpenAPI().YAML()
 	if err != nil {
 		return fmt.Errorf("error generating open api: %w", err)

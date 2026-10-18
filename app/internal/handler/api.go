@@ -5,12 +5,13 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
+	"github.com/feytox/shugraph/backend/graph-api/internal/config"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/httplog/v3"
 )
 
-func NewAPI(router chi.Router, service noteService, pinger pinger) huma.API {
+func NewAPI(router chi.Router, service noteService, pinger pinger, config config.AppConfig) huma.API {
 	router.Use(middleware.Recoverer, middleware.RequestID)
 
 	router.Use(httplog.RequestLogger(slog.Default(), &httplog.Options{}))
@@ -21,6 +22,9 @@ func NewAPI(router chi.Router, service noteService, pinger pinger) huma.API {
 
 	noteHandler := NewNoteHandler(service)
 	noteHandler.Register(api)
+
+	appHandler := NewAppHandler(config)
+	appHandler.Register(api)
 
 	return api
 }
