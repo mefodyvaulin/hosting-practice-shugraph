@@ -8,7 +8,7 @@ import (
 
 type Log struct {
 	Level       slog.Level `env:"LOG_LEVEL" envDefault:"info"`
-	ServiceName string     `env:"SERVICE_NAME" envDefault:"graph-api"`
+	ServiceName string     `env:"SERVICE_NAME" envDefault:"app"`
 	Environment string     `env:"DEPLOYMENT_ENVIRONMENT" envDefault:"local"`
 }
 
